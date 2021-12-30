@@ -12,11 +12,17 @@ function SetAge()
         "year": year
     }
 
-    CalculateAge(DateObject)
+    var result = CalculateAge(DateObject)
     
     if(result==-1)
     {
-        document.getElementById('age').innerHTML = ""  
+        document.getElementById('age').innerHTML = "DOB can't be greater than current date"
+        return;
+    }
+
+    if(result==0)
+    {
+        document.getElementById('age').innerHTML = "Some Random Seconds"
         return;
     }
 
@@ -31,10 +37,15 @@ function CalculateAge(DateObject)
     var currentMonth = Today.getMonth()+1;
     var currentYear = Today.getFullYear();
 
-    if(currentMonth <= DateObject.month || currentDate<=DateObject.date|| currentYear<=DateObject.year)
+    if(currentMonth == DateObject.month && currentDate==DateObject.date && currentYear==DateObject.year)
+    {
+        return 0;
+    }
+
+    if(currentMonth <= DateObject.month && currentDate<DateObject.date && currentYear<=DateObject.year)
         {
-            document.getElementById('age').innerHTML = "DOB can't be greater than current date"
-            return ;
+            
+            return -1;
         }
 
     if(currentMonth >= DateObject.month && currentDate>=DateObject.date)
