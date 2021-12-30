@@ -42,11 +42,8 @@ function CalculateAge(DateObject)
         return 0;
     }
 
-    if(currentMonth <= DateObject.month && currentDate<DateObject.date && currentYear<=DateObject.year)
-        {
-            
+    if((currentMonth <= DateObject.month && currentDate<DateObject.date && currentYear<=DateObject.year)|| currentYear<DateObject.year)
             return -1;
-        }
 
     if(currentMonth >= DateObject.month && currentDate>=DateObject.date)
         DateObject.year = Math.abs(currentYear-DateObject.year)
