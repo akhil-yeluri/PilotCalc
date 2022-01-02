@@ -89,7 +89,7 @@ function CalculateAge(DOB) {
 
         if (DOB.date >= 30) {
           DOB.month++;
-          DOB.date = Math.abs(DOB.date - 31);
+          DOB.date = Math.abs(DOB.date - months[currentMonth - 1]);
         }
       }
     }
