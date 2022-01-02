@@ -1,15 +1,24 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <link rel="stylesheet" href="Calc.css">
+  </head>
 <body>
 <script src="Calc.js"></script>
 
-<h1>Enter Date of Birth</h1>
+<div class="header">  
+<h1 id="text">Enter Date of Birth</h1>
+</div>
 
-  <input type="date" id="dob" name="dob" onchange="SetAge()">
-  <button type="submit" id="ok" onclick="SetAge()">Submit</button>
-</form>
+<div class="container">
 
-<div id="age"></div>
+  <input type="date" id="dob-picker" name="dob" onchange="SetAge()">
+  <h3 id="ageText"><h3>
+
+</div>
+
+<div id="age">
+</div>
 
 </body>
 </html>
