@@ -1,3 +1,5 @@
+var months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
 function SetAge() {
   var dob = document.getElementById('dob-picker').value;
 
@@ -11,7 +13,13 @@ function SetAge() {
     year: year,
   };
 
-  var result = CalculateAge(DOB);
+  var Age = {
+    date: -12,
+    month: -12,
+    year: -12,
+  };
+
+  var result = CalculateAge(DOB, Age);
 
   if (result == -1) {
     document.getElementById('ageText').innerHTML =
@@ -26,21 +34,26 @@ function SetAge() {
 
   document.getElementById('ageText').innerHTML =
     'Your Age is ' +
-    DOB.year +
+    Age.year +
     ' Years ' +
-    DOB.month +
+    Age.month +
     ' Months ' +
-    DOB.date +
+    Age.date +
     ' Days';
 }
 
-function CalculateAge(DOB) {
-  var months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  var Today = new Date();
+function CalculateAge(DOB, Age) {
+  var today = new Date();
 
-  var currentDate = Today.getDate();
-  var currentMonth = Today.getMonth() + 1;
-  var currentYear = Today.getFullYear();
+  var currentDate = today.getDate();
+  var currentMonth = today.getMonth() + 1;
+  var currentYear = today.getFullYear();
+
+  var Today = {
+    date: currentDate,
+    month: currentMonth,
+    year: currentYear,
+  };
 
   if (
     currentMonth == DOB.month &&
@@ -59,40 +72,24 @@ function CalculateAge(DOB) {
 
   //same Year
   if (currentYear == DOB.year) {
-    DOB.year = 0;
-    DOB.month = Math.abs(DOB.month - currentMonth);
-    DOB.date = Math.abs(DOB.date - currentDate);
+    Age.year = 0;
+    Age.month = Math.abs(DOB.month - currentMonth);
+    Age.date = Math.abs(DOB.date - currentDate);
+    return;
   }
 
   //different Year
   if (DOB.year < currentYear) {
     //consecutive years
-    if (DOB.year + 1 == currentYear) {
-      //exact 1 year
-      if (currentMonth - DOB.month == 0 && currentDate - DOB.date == 0) {
-        DOB.year = 1;
-        DOB.month = 0;
-        DOB.date = 0;
-        return;
-      }
+    GetAgeForConsecutiveYears(DOB, Today, Age);
+  }
 
-      if (DOB.month > currentMonth) {
-        DOB.year = 0;
-        var oldMonthsCompleted = Math.abs(DOB.month - 12);
-        var newMonthsCompleted = Math.abs(1 - currentMonth);
-
-        var oldDaysCompleted = Math.abs(DOB.date - months[DOB.month - 1]);
-        var newDaysCompleted = Math.abs(0 - currentDate);
-
-        DOB.month = oldMonthsCompleted + newMonthsCompleted;
-        DOB.date = oldDaysCompleted + newDaysCompleted;
-
-        if (DOB.date >= 30) {
-          DOB.month++;
-          DOB.date = Math.abs(DOB.date - months[currentMonth - 1]);
-        }
-      }
-    }
+  //non-consecutive years
+  else {
+    DOB.year = Math.abs(DOB.year - currentYear);
+    DOB.month = Math.abs(DOB.month - currentMonth);
+    DOB.date = Math.abs(DOB.date - currentDate);
+    return;
   }
 }
 
@@ -106,4 +103,91 @@ function GetMonth(Date) {
 
 function GetYear(Date) {
   return parseInt(Date.substring(0, 5));
+}
+
+function GetAgeForConsecutiveYears(DOB, Today, Age) {
+  var monthCounter = 0;
+
+  if (DOB.month == Today.month && DOB.date == Today.date) {
+    Age.year = 1;
+    Age.month = 0;
+    Age.date = 0;
+    return;
+  }
+
+  //same month different date //stable
+  if (DOB.month == Today.month) {
+    if (DOB.date > Today.date) {
+      var oldMonthsCompleted = Math.abs(12 - DOB.month);
+      var newMonthsCompleted = Math.abs(1 - Today.month);
+
+      var oldDaysCompleted = months[DOB.month - 1] - DOB.date;
+
+      Age.year = 0;
+      Age.month = oldMonthsCompleted + newMonthsCompleted;
+      Age.date = oldDaysCompleted + Today.date;
+
+      return;
+    } else {
+      var oldMonthsCompleted = Math.abs(12 - DOB.month);
+      var newMonthsCompleted = Math.abs(1 - Today.month);
+
+      Age.year = 1;
+      Age.month = 0;
+      Age.date = Today.date - DOB.date;
+      return;
+    }
+  }
+
+  //unstable code
+  if (DOB.month < Today.month) {
+    Age.year = 1;
+
+    if (DOB.date >= Today.date) {
+      //to be refactored
+      monthCounter++;
+      var oldMonthsCompleted = Math.abs(12 - DOB.month);
+      var newMonthsCompleted = Math.abs(1 - Today.month);
+
+      Age.month = monthCounter + oldMonthsCompleted + newMonthsCompleted;
+      Age.date = Today.date - DOB.date;
+
+      return;
+    } else {
+      var oldMonthsCompleted = Math.abs(12 - DOB.month);
+      var newMonthsCompleted = Math.abs(1 - Today.month);
+
+      Age.month = oldMonthsCompleted + newMonthsCompleted;
+      Age.date = Math.abs(months[DOB.month - 1] - DOB.date) + Today.date;
+
+      return;
+    }
+  }
+
+  //stable
+  if (DOB.month > Today.month && DOB.date <= Today.date) {
+    monthCounter++;
+    var oldMonthsCompleted = Math.abs(12 - DOB.month);
+    var newMonthsCompleted = Math.abs(1 - Today.month);
+
+    Age.year = 0;
+    Age.month = monthCounter + oldMonthsCompleted + newMonthsCompleted;
+    Age.date = Today.date - DOB.date;
+
+    return;
+  }
+
+  //stable
+  if (DOB.month > Today.month && DOB.date > Today.date) {
+    var oldMonthsCompleted = Math.abs(12 - DOB.month);
+    var newMonthsCompleted = Math.abs(1 - Today.month);
+
+    var oldDaysCompleted = months[DOB.month - 1] - DOB.date;
+
+    Age.year = 0;
+    Age.month = oldMonthsCompleted + newMonthsCompleted;
+    Age.date = oldDaysCompleted + Today.date;
+
+    return;
+  }
 }
