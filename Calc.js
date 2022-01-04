@@ -60,10 +60,7 @@ function CalculateAge(DOB,Age)
     //same Year
     if(currentYear==DOB.year)
         {
-            Age.year=0;
-            Age.month=Math.abs(DOB.month-currentMonth)
-            Age.date=Math.abs(DOB.date-currentDate)
-            return;
+            GetAgeForSameYear(DOB,Today,Age)
         }
 
     //different Year
@@ -208,4 +205,28 @@ function GetAgeForConsecutiveYears(DOB,Today,Age)
 
 
 
+}
+
+function GetAgeForSameYear(DOB,Today,Age){
+
+    Age.year=0
+    
+    if(DOB.date == Today.date)
+    {
+        Age.date =0
+        Age.month = Math.abs(Today.month - DOB.month)
+        return
+    }
+    
+    if(DOB.date > Today.date){
+
+        Age.date = (months[DOB.month-1]-DOB.date)+Today.date
+        Age.month = (Today.month - DOB.month)-1
+    }
+    
+    if(DOB.date < Today.date)
+    {
+        Age.month=(Today.month - DOB.month)
+        Age.date = Today.date - DOB.date
+    }
 }
