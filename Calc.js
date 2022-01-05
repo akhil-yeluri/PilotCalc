@@ -84,8 +84,8 @@ function CalculateAge(DOB, Age) {
 
   //non-consecutive years
   else {
-    var addYears = (Today.year - DOB.year )- 1;
-    DOB.year = (Today.year) - 1;
+    var addYears = Today.year - DOB.year - 1;
+    DOB.year = Today.year - 1;
     GetAgeForConsecutiveYears(DOB, Today, Age);
     Age.year += addYears;
     return;
@@ -180,8 +180,11 @@ function GetAgeForConsecutiveYears(DOB, Today, Age) {
   if (DOB.month > Today.month && DOB.date > Today.date) {
     var oldMonthsCompleted = Math.abs(12 - DOB.month);
     var newMonthsCompleted = Math.abs(1 - Today.month);
+    var oldDaysCompleted = 0;
 
-    var oldDaysCompleted = months[DOB.month - 1] - DOB.date;
+    if (months[DOB.month - 1] == 30)
+      oldDaysCompleted = months[DOB.month - 1] - DOB.date + 1;
+    else oldDaysCompleted = months[DOB.month - 1] - DOB.date;
 
     Age.year = 0;
     Age.month = oldMonthsCompleted + newMonthsCompleted;
