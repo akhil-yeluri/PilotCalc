@@ -13,6 +13,11 @@ function SetAge() {
     year: year,
   };
 
+  if (isNaN(DOB.date) || isNaN(DOB.year) || isNaN(DOB.month)) {
+    document.getElementById('ageText').innerHTML = null;
+    return;
+  }
+
   var Age = {
     date: -12,
     month: -12,
