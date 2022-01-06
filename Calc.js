@@ -63,9 +63,8 @@ function CalculateAge(DOB, Age) {
     return 0;
 
   if (
-    currentYear < DOB.year ||
-    currentMonth < DOB.month ||
-    currentDate < DOB.date
+    currentYear <= DOB.year &&
+    (currentMonth < DOB.month || currentDate < DOB.date)
   )
     return -1;
 
