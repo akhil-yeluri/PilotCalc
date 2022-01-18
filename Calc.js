@@ -83,6 +83,7 @@ function CalculateAge(DOB, Age) {
   if (DOB.year + 1 == currentYear) {
     //consecutive years
     GetAgeForConsecutiveYears(DOB, Today, Age);
+    HandleFebCondition(DOB, Today, Age);
   }
 
   //non-consecutive years
@@ -91,6 +92,7 @@ function CalculateAge(DOB, Age) {
     DOB.year = Today.year - 1;
     GetAgeForConsecutiveYears(DOB, Today, Age);
     Age.year += addYears;
+    HandleFebCondition(DOB, Today, Age);
     return;
   }
 }
@@ -215,4 +217,8 @@ function GetAgeForSameYear(DOB, Today, Age) {
     Age.month = Today.month - DOB.month;
     Age.date = Today.date - DOB.date;
   }
+}
+
+function HandleFebCondition(DOB, Today, Age) {
+  if (DOB.month == 2 && DOB.date > Today.date) Age.date += 3;
 }
