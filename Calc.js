@@ -1,3 +1,4 @@
+// v1.0.0 YEL_EDITION
 var months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 function SetAge() {
